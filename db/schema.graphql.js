@@ -95,6 +95,16 @@ const typeDefs = gql`
     COMPLETED
     CANCELLED
   }
+  #---------------------
+
+  type TopClient {
+    total: Float
+    client: [Client]
+  }
+  type TopSeller {
+    total: Float
+    seller: [User]
+  }
 
   #---------------------
   type Query {
@@ -115,6 +125,11 @@ const typeDefs = gql`
     getOrderBySeller: [Order]
     getOrderById(ID: ID!): Order
     getOrderByStatus(status: String!): [Order]
+
+    #AdvanceQuery
+    getTopClient: [TopClient]
+    getTopSeller: [TopSeller]
+    getProductByName(name: String!): [Product]
   }
 
   type Mutation {

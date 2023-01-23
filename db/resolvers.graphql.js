@@ -75,6 +75,53 @@ const resolvers = {
         throw new Error(error);
       }
     },
+    getTopClient: async (_, {}) => {
+      const getAllClients = await order.aggregate([
+        { $match: { status: "COMPLETED" } },
+        {
+          $group: {
+            _id: "$client",
+            total: { $sum: "$total" },
+          },
+        },
+        {
+          $lookup: {
+            from: "clients",
+            localField: "_id",
+            foreignField: "_id",
+            as: "client",
+          },
+        },
+      ]);
+      return getAllClients;
+    },
+    getTopSeller: async (_, {}) => {
+      const getAllClients = await order.aggregate([
+        { $match: { status: "COMPLETED" } },
+        {
+          $group: {
+            _id: "$seller",
+            total: { $sum: "$total" },
+          },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "_id",
+            foreignField: "_id",
+            as: "seller",
+          },
+        },
+      ]);
+      return getAllClients;
+    },
+    getProductByName: async (_, { name }) => {
+      //text is the index's name in the models file
+      const getProductByName = await product.find({
+        $text: { $search: name },
+      });
+      return getProductByName;
+    },
   },
   Mutation: {
     newUser: async (_, { input }) => {
