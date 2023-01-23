@@ -43,6 +43,38 @@ const resolvers = {
       if (!clientExist) throw new Error("No exist client with ID" + ID);
       return clientExist;
     },
+    getAllOrders: async () => {
+      try {
+        return order.find({});
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    getOrderBySeller: async (_, {}, ctx) => {
+      try {
+        const listOrderBySeller = await order.find({ seller: ctx.user.id });
+        if (!listOrderBySeller)
+          throw new Error("No exist seller with ID" + ctx.user.id);
+        return listOrderBySeller;
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    getOrderById: async (_, { ID }, ctx) => {
+      const orderById = await order.findById(ID);
+      //check seller
+      await checkSeller(orderById.seller, ctx.user.id);
+
+      return orderById;
+    },
+    getOrderByStatus: async (_, { status }) => {
+      try {
+        const listOrder = await order.find({ status });
+        return listOrder;
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
   },
   Mutation: {
     newUser: async (_, { input }) => {
@@ -188,6 +220,11 @@ const resolvers = {
       //return value
       return orderData;
     },
+    deleteOrder: async (_, { id }) => {
+      await checkOrder(id);
+      await order.findOneAndRemove({ _id: id });
+      return `The order with id ${id} was deleted`;
+    },
   },
 };
 
@@ -221,6 +258,15 @@ const checkClient = async (clientID, ctxId) => {
     throw new Error("Does not have the credentials");
 
   return clientData;
+};
+
+const checkSeller = async (sellerID, ctxId) => {
+  const sellerData = await user.findById(sellerID);
+  if (!sellerData) throw new Error(`The sellerID: ${sellerID} does not exist}`);
+  if (sellerData.id.toString() !== ctxId)
+    throw new Error("Does not have the credentials");
+
+  return sellerData;
 };
 
 module.exports = resolvers;
