@@ -8,9 +8,8 @@ require("dotenv").config({ path: ".env" });
 //Resolvers
 const resolvers = {
   Query: {
-    getUserByToken: async (_, { token }) => {
-      const { email } = jwt.decode(token);
-      const userData = user.findOne({ email });
+    getUserByToken: async (_, {}, ctx) => {
+      const userData = user.findOne({ email: ctx.user.email });
       return userData;
     },
     getAllProducts: async () => {
