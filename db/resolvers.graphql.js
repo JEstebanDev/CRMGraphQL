@@ -196,17 +196,17 @@ const resolvers = {
       } = ctx;
       const { email } = input;
       //Check Client
-      const existClient = client.findOne({ email });
-      if (!existClient)
+      const existClient = await client.findOne({ email });
+      if (existClient != null)
         throw new Error("Client already exist with email:" + email);
 
       try {
         const newClient = new client(input);
         newClient.seller = id;
-        newClient.save();
-        return newClient;
+        const result = await newClient.save();
+        return result;
       } catch (error) {
-        new Error(error);
+        throw new Error(error);
       }
     },
     updateClient: async (_, { id, input }, ctx) => {
