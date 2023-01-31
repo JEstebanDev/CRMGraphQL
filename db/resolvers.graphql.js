@@ -225,7 +225,7 @@ const resolvers = {
       if (!existClient) throw new Error("No exist client with ID:" + id);
       if (existClient.seller.toString() !== ctx.user.id)
         throw new Error("Does not have the credentials");
-      //await client.findOneAndDelete({ _id: id });
+      await client.findOneAndDelete({ _id: id });
       return `Client with ID:${id} deleted`;
     },
     newOrder: async (_, { input }, ctx) => {
