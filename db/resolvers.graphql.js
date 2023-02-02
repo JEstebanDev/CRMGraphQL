@@ -165,7 +165,6 @@ const resolvers = {
       //check Product
       const existProduct = await product.findOne({ name });
       if (existProduct) throw Error("Product already exist");
-
       try {
         const newProduct = new product(input);
         newProduct.save();

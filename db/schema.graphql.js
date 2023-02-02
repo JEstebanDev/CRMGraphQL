@@ -75,11 +75,13 @@ const typeDefs = gql`
 
   type orderGroup {
     id: ID
+    name: String
     quantity: Int
   }
 
   input orderProductInput {
     id: ID
+    name: String
     quantity: Int
   }
 
