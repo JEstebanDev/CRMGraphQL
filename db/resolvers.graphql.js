@@ -51,7 +51,10 @@ const resolvers = {
     },
     getOrderBySeller: async (_, {}, ctx) => {
       try {
-        const listOrderBySeller = await order.find({ seller: ctx.user.id });
+        const listOrderBySeller = await order
+          .find({ seller: ctx.user.id })
+          .populate("client");
+        console.log(listOrderBySeller);
         if (!listOrderBySeller)
           throw new Error("No exist seller with ID" + ctx.user.id);
         return listOrderBySeller;
