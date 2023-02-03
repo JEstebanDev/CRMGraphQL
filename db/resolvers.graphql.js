@@ -54,7 +54,6 @@ const resolvers = {
         const listOrderBySeller = await order
           .find({ seller: ctx.user.id })
           .populate("client");
-        console.log(listOrderBySeller);
         if (!listOrderBySeller)
           throw new Error("No exist seller with ID" + ctx.user.id);
         return listOrderBySeller;
@@ -94,6 +93,12 @@ const resolvers = {
             as: "client",
           },
         },
+        {
+          $limit: 10,
+        },
+        {
+          $sort: { total: -1 },
+        },
       ]);
       return getAllClients;
     },
@@ -113,6 +118,12 @@ const resolvers = {
             foreignField: "_id",
             as: "seller",
           },
+        },
+        {
+          $limit: 3,
+        },
+        {
+          $sort: { total: -1 },
         },
       ]);
       return getAllClients;
