@@ -92,6 +92,13 @@ const typeDefs = gql`
     status: statusOrder!
   }
 
+  input orderUpdateInput {
+    product: [orderProductInput]
+    total: Float
+    client: ID!
+    status: statusOrder!
+  }
+
   enum statusOrder {
     PENDING
     COMPLETED
@@ -151,7 +158,7 @@ const typeDefs = gql`
 
     #Order
     newOrder(input: orderInput): Order
-    updateOrder(id: ID!, input: orderInput): Order
+    updateOrder(id: ID!, input: orderUpdateInput): Order
     deleteOrder(id: ID!): String
   }
 `;

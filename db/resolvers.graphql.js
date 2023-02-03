@@ -260,11 +260,15 @@ const resolvers = {
       //set client
       updateOrder.client = idClient;
       //check product stock
-      await checkStock(product);
+      if (product != null) {
+        await checkStock(product);
+      }
       //update data
-      orderData = order.findOneAndUpdate({ _id: id }, updateOrder, {
-        new: true,
-      });
+      orderData = order
+        .findOneAndUpdate({ _id: id }, updateOrder, {
+          new: true,
+        })
+        .populate("client");
       //return value
       return orderData;
     },
